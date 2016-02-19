@@ -11,6 +11,8 @@
 /tmp/
 *.json
 *.log
+*.zip
+/rethinkdb_data
 
 ## Documentation cache and generated files:
 /.yardoc/

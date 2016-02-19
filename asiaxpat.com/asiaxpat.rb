@@ -3,14 +3,15 @@ require 'logger'
 require 'nokogiri'
 require 'open-uri'
 require 'json'
+require_relative '../lib/preserve'
 
-class Scraper
+class Asiaxpat
 
-  def initialize filename, url
+  def initialize category, url
     @logger = Logger.new('errors.log')
     @base_url = url
     @products = []
-    @filename = "#{filename}.#{Time.now.to_i.to_s}.json"
+    @category = category
     @css_query = '.soltop .listitem'
     @previous_first_page_link = ''
   end
@@ -30,6 +31,7 @@ class Scraper
       @products << {
         title: title,
         price: price,
+        category: @category,
         description: description,
         link: link
       }
@@ -37,18 +39,8 @@ class Scraper
   end
 
   def save
-    puts "Saving #{@file}"
-    type = 'w+'
-    if !File.exists?(@filename)
-      type = 'a+'
-    end
-    File.open(@filename, type) do |f|
-      begin
-        f.puts @products.to_json
-      rescue Exception => e
-        @logger.error("Failed #{e} - #{product}")
-      end
-    end
+    puts "Saving #{@products.size}"
+    Preserve.new.save(@products)
   end
 
   def is_duplicate page
@@ -78,27 +70,3 @@ class Scraper
     save
   end
 end
-
-def start site
-  links = []
-  url = "#{site}/classifieds/"
-
-  puts "Getting links #{url}"
-  page = Nokogiri::HTML(open(url))
-  css_query = '.rsb2'
-  if(page.css(css_query).any?)
-    page.css(css_query).each do |atag|
-      links << atag['href']
-    end
-  else
-    puts "No links found"
-  end
-
-  links.each do |relative_url|
-    filename = relative_url.gsub('/classifieds/','')[0..-2]
-    base_url = "#{site}#{relative_url}"
-    Scraper.new(filename, base_url).fetch
-  end
-end
-
-start 'http://hongkong.asiaxpat.com'
