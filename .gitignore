@@ -9,6 +9,8 @@
 /test/tmp/
 /test/version_tmp/
 /tmp/
+*.json
+*.log
 
 ## Documentation cache and generated files:
 /.yardoc/
