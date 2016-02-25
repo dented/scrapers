@@ -91,3 +91,5 @@ runner = Runner.new
 # runner.geoexpat
 # runner.dcfever
 # runner.pricecomhk
+# runner.list_of_categories
+runner.by_category 'sporting-goods'

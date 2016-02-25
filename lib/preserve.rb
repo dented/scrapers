@@ -27,7 +27,7 @@ class Preserve
   def filter_by_category category
     r.table('listings').filter{ |item|
       item['category'].eq(category)
-    }.run(@conn)
+    }.pluck('link', 'title', 'price').run(@conn)
   end
 
   def categories
