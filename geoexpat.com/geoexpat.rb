@@ -1,5 +1,4 @@
 # encoding uft8
-require 'logger'
 require 'nokogiri'
 require 'open-uri'
 require 'json'
@@ -8,7 +7,6 @@ require_relative '../lib/preserve'
 class Geoexpat
 
   def initialize category, url
-    @logger = Logger.new('errors.log')
     @base_url = url
     @products = []
     @category = category
@@ -24,7 +22,7 @@ class Geoexpat
       price_details = page.css('.dj-item .general_det span[itemprop="price"]').first
       price = ''
       if !price_details.nil?
-        price = "#{price_details.inner_text.strip.gsub('HK$', '') } HKD"
+        price = "#{price_details.inner_text.strip.gsub('HK$', '').strip } HKD"
       end
 
       description_details = page.css(".dj-item .description .desc_content").first
@@ -34,10 +32,10 @@ class Geoexpat
       end
 
       @products << {
-        title: title,
-        price: price,
+        title: title.strip,
+        price: price.strip,
         category: @category,
-        description: description,
+        description: description.strip,
         link: link
       }
     end

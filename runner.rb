@@ -92,4 +92,4 @@ runner = Runner.new
 # runner.dcfever
 # runner.pricecomhk
 # runner.list_of_categories
-runner.by_category 'sporting-goods'
+runner.by_category 'free'

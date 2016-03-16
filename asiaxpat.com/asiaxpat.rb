@@ -1,5 +1,4 @@
 # encoding uft8
-require 'logger'
 require 'nokogiri'
 require 'open-uri'
 require 'json'
@@ -8,7 +7,6 @@ require_relative '../lib/preserve'
 class Asiaxpat
 
   def initialize category, url
-    @logger = Logger.new('errors.log')
     @base_url = url
     @products = []
     @category = category
@@ -27,12 +25,12 @@ class Asiaxpat
       price = price_details.children.last.inner_text.strip if !price_details.nil? && !price_details.children.nil?
 
       description = page.css("#{item.css_path} .leftlistitem").first.inner_text.strip
-      
+
       @products << {
-        title: title,
-        price: price,
+        title: title.strip,
+        price: price.strip,
         category: @category,
-        description: description,
+        description: description.strip,
         link: link
       }
     end
